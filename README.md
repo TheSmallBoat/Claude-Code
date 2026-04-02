@@ -2,9 +2,7 @@
 
 > 从 `@anthropic-ai/claude-code` npm 包的 source map 中还原的完整 TypeScript 源码，**可本地运行**
 
-<p align="center">
-  <img src="preview.png?raw=true" alt="Claude Code CLI" width="700">
-</p>
+![Claude Code CLI](preview.png?raw=true)
 
 > [!WARNING]
 > 本仓库为**非官方**版本，基于公开 npm 发布包 source map 还原，**仅供研究学习**。源码版权归 [Anthropic](https://www.anthropic.com) 所有。
@@ -21,15 +19,23 @@ bun run version   # 验证版本
 
 ---
 
-## 从源码中发现的 7 大隐藏功能
+## 文档导览
+
+- `分析文档A/`：隐藏功能与 feature gate 考古，本 README 继续充当这一组文档的总览页。
+- `分析文档B/`：面向架构抽象与 Rust 重构方法论的系统级技术报告，入口见 [00-总序与方法](分析文档B/00-总序与方法.md)。
+- `分析文档C/`：面向 Rust 基线实现的 Runtime Core 逆向萃取规格，入口见 [00-萃取范围与文档路线图](分析文档C/00-萃取范围与文档路线图.md)。
+
+---
+
+## 从源码中发现的 7 大隐藏功能（分析文档A）
 
 通过阅读还原后的 1,987 个 TypeScript 源文件，我们发现了大量未公开的隐藏功能。这些功能通过**编译开关**（`feature()`）和**用户类型**（`USER_TYPE`）进行门控，外部发布版中大部分被裁剪。
 
 ---
 
-### 1. [BUDDY — AI 电子宠物](docs/01-buddy.md)
+### 1. [BUDDY — AI 电子宠物](分析文档A/01-buddy.md)
 
-> 源码位置：`src/buddy/` · [查看完整分析 →](docs/01-buddy.md)
+> 源码位置：`TS-Source/buddy/` · [查看完整分析 →](分析文档A/01-buddy.md)
 
 终端里的拓麻歌子！一个完整的虚拟宠物系统。
 
@@ -44,9 +50,9 @@ bun run version   # 验证版本
 
 ---
 
-### 2. [KAIROS — 永不关机的 Claude](docs/02-kairos.md)
+### 2. [KAIROS — 永不关机的 Claude](分析文档A/02-kairos.md)
 
-> 源码位置：`src/assistant/`、`src/proactive/`、`src/services/autoDream/` · [查看完整分析 →](docs/02-kairos.md)
+> 源码位置：`TS-Source/assistant/`、`TS-Source/proactive/`、`TS-Source/services/autoDream/` · [查看完整分析 →](分析文档A/02-kairos.md)
 
 关掉终端 Claude 还在运行的持久助手模式。
 
@@ -61,9 +67,9 @@ bun run version   # 验证版本
 
 ---
 
-### 3. [ULTRAPLAN — 云端深度规划](docs/03-ultraplan.md)
+### 3. [ULTRAPLAN — 云端深度规划](分析文档A/03-ultraplan.md)
 
-> 源码位置：`src/commands/ultraplan.tsx`、`src/utils/ultraplan/` · [查看完整分析 →](docs/03-ultraplan.md)
+> 源码位置：`TS-Source/commands/ultraplan.tsx`、`TS-Source/utils/ultraplan/` · [查看完整分析 →](分析文档A/03-ultraplan.md)
 
 把难题甩给云端 Opus 独立研究最长 30 分钟。
 
@@ -76,9 +82,9 @@ bun run version   # 验证版本
 
 ---
 
-### 4. [Coordinator — 多 Agent 编排模式](docs/04-coordinator.md)
+### 4. [Coordinator — 多 Agent 编排模式](分析文档A/04-coordinator.md)
 
-> 源码位置：`src/coordinator/` · [查看完整分析 →](docs/04-coordinator.md)
+> 源码位置：`TS-Source/coordinator/` · [查看完整分析 →](分析文档A/04-coordinator.md)
 
 主 Claude 变成纯指挥官，Worker 并行执行任务。
 
@@ -91,14 +97,14 @@ bun run version   # 验证版本
 
 ---
 
-### 5. [26+ 隐藏命令 & 秘密开关](docs/05-hidden-commands.md)
+### 5. [26+ 隐藏命令 & 秘密开关](分析文档A/05-hidden-commands.md)
 
-> 源码位置：`src/commands.ts`、`src/commands/` · [查看完整分析 →](docs/05-hidden-commands.md)
+> 源码位置：`TS-Source/commands.ts`、`TS-Source/commands/` · [查看完整分析 →](分析文档A/05-hidden-commands.md)
 
 #### Feature-gated 命令（编译开关控制）
 
 | 命令 | 功能 | 开关 |
-|------|------|------|
+| ------ | ------ | ------ |
 | `/buddy` | 宠物系统 | `BUDDY` |
 | `/proactive` | 主动自主模式 | `PROACTIVE` / `KAIROS` |
 | `/assistant` | 助手模式 | `KAIROS` |
@@ -115,7 +121,7 @@ bun run version   # 验证版本
 #### 仅内部用户（`USER_TYPE === 'ant'`）命令
 
 | 命令 | 功能 |
-|------|------|
+| ------ | ------ |
 | `/teleport` | 传送会话到远程/本地 |
 | `/bughunter` | 内部 Bug 猎人 |
 | `/mock-limits` | 模拟速率限制 |
@@ -130,7 +136,7 @@ bun run version   # 验证版本
 
 #### 隐藏 CLI 参数
 
-```
+```text
 --teleport [session]    恢复传送会话
 --remote [description]  创建远程会话
 --proactive             主动模式
@@ -143,9 +149,9 @@ bun run version   # 验证版本
 
 ---
 
-### 6. [Bridge — 远程遥控终端](docs/06-bridge.md)
+### 6. [Bridge — 远程遥控终端](分析文档A/06-bridge.md)
 
-> 源码位置：`src/bridge/`（33 个文件） · [查看完整分析 →](docs/06-bridge.md)
+> 源码位置：`TS-Source/bridge/`（33 个文件） · [查看完整分析 →](分析文档A/06-bridge.md)
 
 从 claude.ai 或手机直接操控本地 CLI。
 
@@ -158,19 +164,16 @@ bun run version   # 验证版本
 
 ---
 
-### 7. [50 个编译开关 + 远程门控](docs/07-feature-gates.md)
+### 7. [50 个编译开关 + 远程门控](分析文档A/07-feature-gates.md)
 
-外部发布版是**阉割版**。Anthropic 通过三层门控控制功能。[查看完整分析 →](docs/07-feature-gates.md)
+外部发布版是**阉割版**。Anthropic 通过三层门控控制功能。[查看完整分析 →](分析文档A/07-feature-gates.md)
 
 #### 第一层：编译时开关（`feature()`，约 50 个）
 
-构建时决定代码包含/排除，以下是完整列表：
-
-<details>
-<summary>点击展开全部 50 个编译开关</summary>
+完整列表如下：
 
 | 开关 | 说明 |
-|------|------|
+| ------ | ------ |
 | `BUDDY` | 宠物伴侣系统 |
 | `KAIROS` | 持久助手模式 |
 | `KAIROS_BRIEF` | 简报模式 |
@@ -222,8 +225,6 @@ bun run version   # 验证版本
 | `UPLOAD_USER_SETTINGS` | 上传用户设置 |
 | `BREAK_CACHE_COMMAND` | 缓存清除注入 |
 
-</details>
-
 #### 第二层：用户类型（`USER_TYPE`）
 
 - **`ant`**（Anthropic 内部）— 解锁全部功能、20 分钟 GrowthBook 刷新、调试工具、200+ 处专属检查
@@ -232,7 +233,7 @@ bun run version   # 验证版本
 #### 第三层：GrowthBook 远程 A/B 测试
 
 | 开关 | 控制内容 |
-|------|---------|
+| ------ | --------- |
 | `tengu_kairos` | KAIROS 助手模式开关 |
 | `tengu_onyx_plover` | 自动做梦阈值（间隔/会话数） |
 | `tengu_cobalt_frost` | 语音识别（Nova 3）开关 |
@@ -248,11 +249,10 @@ bun run version   # 验证版本
 
 ## 隐藏环境变量速查
 
-<details>
-<summary>点击展开完整环境变量列表</summary>
+完整列表如下：
 
 | 环境变量 | 说明 |
-|----------|------|
+| ---------- | ------ |
 | `ANTHROPIC_MODEL` | 模型覆盖 |
 | `CLAUDE_CODE_MAX_OUTPUT_TOKENS` | 最大输出 token |
 | `CLAUDE_CODE_DISABLE_THINKING` | 禁用思考 |
@@ -267,14 +267,12 @@ bun run version   # 验证版本
 | `CLAUDE_CODE_IDLE_THRESHOLD_MINUTES` | 空闲阈值（默认 75 分钟） |
 | `CLAUDE_INTERNAL_FC_OVERRIDES` | GrowthBook 覆盖（仅 ant） |
 
-</details>
-
 ---
 
 ## 项目结构
 
-```
-src/                    # 核心源码（1,987 个 TS/TSX）
+```text
+TS-Source/              # 核心源码（1,987 个 TS/TSX）
 ├── tools/              # 53 个工具（Bash/FileEdit/Agent/MCP...）
 ├── commands/           # 87 个斜杠命令
 ├── services/           # API / MCP / analytics / autoDream
